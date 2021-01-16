@@ -23,6 +23,7 @@ namespace Worker
 
         protected override async Task ExecuteAsync(CancellationToken cancellation)
         {
+            _logger.LogInformation("UserDeleter beginning ExecuteAsync");
             while (!cancellation.IsCancellationRequested)
             {
                 DeleteExpiredUsers()

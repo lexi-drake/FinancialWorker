@@ -24,6 +24,7 @@ namespace Worker
 
         protected override async Task ExecuteAsync(CancellationToken cancellation)
         {
+            _logger.LogInformation("TransactionExecuter beginning ExecuteAsync");
             while (!cancellation.IsCancellationRequested)
             {
                 ExecuteTransactions()

@@ -19,6 +19,7 @@ namespace Worker
                 {
                     IConfiguration configuration = hostContext.Configuration;
 
+                    services.AddLogging();
                     services.AddScoped<ILedgerRepository>(s => new LedgerRepository(
                         configuration["MONGO_DB"],
                         configuration["LEDGER_DB"]));
