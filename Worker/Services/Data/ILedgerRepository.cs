@@ -11,5 +11,8 @@ namespace Worker
         Task<long> DeleteIncomeGeneratorsByUserIdAsync(string userId);
         Task<IEnumerable<Frequency>> GetFrequenciesAsync();
         Task<IEnumerable<RecurringTransaction>> GetRecurringTransactionsByFrequencyAndLastExecutedAsync(string frequencyId, DateTime since);
+        Task InsertLedgerEntryAsync(LedgerEntry entry);
+        Task UpdateRecurringTransactionLastExecutedAsync(string id, DateTime lastExecuted);
+        Task UpdateRecurringTransactionLastTriggeredAsync(string id, DateTime lastTriggered);
     }
 }

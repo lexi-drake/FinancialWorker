@@ -21,6 +21,7 @@ namespace Worker
         {
             foreach (var transaction in command.RecurringTransactions)
             {
+                _logger.LogInformation($"Executing transaction {transaction.Id} for user {transaction.UserId}");
                 var entry = new LedgerEntry()
                 {
                     UserId = transaction.UserId,
@@ -32,8 +33,8 @@ namespace Worker
                     TransactionDate = DateTime.Now,
                     CreatedDate = DateTime.Now
                 };
-                // TODO (alexa): insert entry.
-                // TODO (alexa): update transaction LastExecuted.
+                await _repo.InsertLedgerEntryAsync(entry);
+                await _repo.UpdateRecurringTransactionLastExecutedAsync(transaction.Id, DateTime.Now);
             }
             return Unit.Value;
         }

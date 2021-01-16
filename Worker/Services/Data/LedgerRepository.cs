@@ -54,5 +54,26 @@ namespace Worker
             var cursor = await _db.GetCollection<RecurringTransaction>().FindAsync(frequencyFilter & lastExecutedFilter);
             return await cursor.ToListAsync();
         }
+
+        public async Task InsertLedgerEntryAsync(LedgerEntry entry)
+        {
+            await _db.GetCollection<LedgerEntry>().InsertOneAsync(entry);
+        }
+
+        public async Task UpdateRecurringTransactionLastExecutedAsync(string id, DateTime lastExecuted)
+        {
+            var filter = Builders<RecurringTransaction>.Filter.Eq(x => x.Id, id);
+            var update = Builders<RecurringTransaction>.Update.Set(x => x.LastExecuted, lastExecuted);
+
+            await _db.GetCollection<RecurringTransaction>().UpdateOneAsync(filter, update);
+        }
+
+        public async Task UpdateRecurringTransactionLastTriggeredAsync(string id, DateTime lastTriggered)
+        {
+            var filter = Builders<RecurringTransaction>.Filter.Eq(x => x.Id, id);
+            var update = Builders<RecurringTransaction>.Update.Set(x => x.LastTriggered, lastTriggered);
+
+            await _db.GetCollection<RecurringTransaction>().UpdateOneAsync(filter, update);
+        }
     }
 }

@@ -31,7 +31,7 @@ namespace Worker
                 response.AddRange(transactions);
                 foreach (var transaction in transactions)
                 {
-                    // TODO (alexa): update transaction LastTriggered.
+                    await _repo.UpdateRecurringTransactionLastTriggeredAsync(transaction.Id, DateTime.Now);
                 }
                 _logger.LogInformation($"{frequency.Description}: {transactions.Count()}");
             }
