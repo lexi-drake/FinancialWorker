@@ -23,6 +23,7 @@ namespace Worker
 
         protected override async Task ExecuteAsync(CancellationToken cancellation)
         {
+            Console.WriteLine($"loglevel info: {_logger.IsEnabled(LogLevel.Information)}");
             _logger.LogInformation("UserDeleter beginning ExecuteAsync");
             while (!cancellation.IsCancellationRequested)
             {
