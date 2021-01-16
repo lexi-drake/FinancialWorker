@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +10,9 @@ namespace Worker
 {
     public class Program
     {
+        private const string APPSETTINGS = "appsettings.json";
+        private static IConfiguration Configuration;
+
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
@@ -16,22 +20,33 @@ namespace Worker
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostContext, config) =>
+                {
+                    if (File.Exists(APPSETTINGS))
+                    {
+                        config.AddJsonFile(APPSETTINGS);
+                    }
+                    else
+                    {
+                        config.AddEnvironmentVariables();
+                    }
+                    Configuration = config.Build();
+                })
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
+                    logging.AddConfiguration(Configuration);
                     logging.AddConsole();
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
-                    IConfiguration configuration = hostContext.Configuration;
-
                     services.AddLogging();
                     services.AddScoped<ILedgerRepository>(s => new LedgerRepository(
-                        configuration["MONGO_DB"],
-                        configuration["LEDGER_DB"]));
+                        Configuration["MONGO_DB"],
+                        Configuration["LEDGER_DB"]));
                     services.AddScoped<IUserRespository>(s => new UserRepository(
-                        configuration["MONGO_DB"],
-                        configuration["USERS_DB"]));
+                        Configuration["MONGO_DB"],
+                        Configuration["USERS_DB"]));
 
                     services.AddMediatR(typeof(Program));
                     services.AddHostedService<UserDeleter>();
