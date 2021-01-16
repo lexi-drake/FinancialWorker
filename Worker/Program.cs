@@ -36,9 +36,8 @@ namespace Worker
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
-                    logging.AddConfiguration(Configuration);
-                    logging.AddConsole();
                     logging.SetMinimumLevel(LogLevel.Information);
+                    logging.AddConsole();
                 })
                 .ConfigureServices((hostContext, services) =>
                 {

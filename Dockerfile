@@ -22,4 +22,4 @@ RUN dotnet publish -c Release -o /src/publish
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS runtime
 WORKDIR /app
 COPY --from=publish /src/publish .
-ENTRYPOINT ["dotnet", "worker.dll"]
+CMD dotnet Worker.dll
