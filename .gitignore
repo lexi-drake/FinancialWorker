@@ -1,0 +1,4 @@
+appsettings.*
+bin/
+obj/
+.vscode/
