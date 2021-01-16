@@ -19,7 +19,7 @@ FROM build AS publish
 WORKDIR /src/Worker
 RUN dotnet publish -c Release -o /src/publish
 
-FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS runtime
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS runtime
 WORKDIR /app
 COPY --from=publish /src/publish .
 CMD dotnet Worker.dll
