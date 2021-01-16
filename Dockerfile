@@ -17,9 +17,9 @@ RUN dotnet test
 # Publish
 FROM build AS publish 
 WORKDIR /src/Worker
-RUN dotnet publish -c Release -o /src/publish
+RUN dotnet publish -c Release -o /app/publish
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS runtime
 WORKDIR /app
-COPY --from=publish /src/publish .
+COPY --from=publish /app/publish .
 CMD dotnet Worker.dll
