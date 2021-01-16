@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -37,6 +38,7 @@ namespace Worker
                     logging.ClearProviders();
                     logging.AddConfiguration(Configuration);
                     logging.AddConsole();
+                    logging.SetMinimumLevel(LogLevel.Information);
                 })
                 .ConfigureServices((hostContext, services) =>
                 {

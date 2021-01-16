@@ -30,7 +30,7 @@ namespace Worker
                 ExecuteTransactions()
                     .ContinueWith(task =>
                     {
-                        _logger.LogInformation($"Executing transactions complete at {DateTime.Now}.");
+                        _logger.LogInformation("Executing transactions complete.");
                     }, TaskContinuationOptions.None)
                     .ContinueWith(task =>
                     {
@@ -42,7 +42,7 @@ namespace Worker
 
         private async Task ExecuteTransactions()
         {
-            _logger.LogInformation($"Executing transactions starting at {DateTime.Now}.");
+            _logger.LogInformation("Executing transactions starting.");
             var transactions = await _mediatr.Send(new GetDueTransactionsQuery());
             if (!transactions.Any())
             {

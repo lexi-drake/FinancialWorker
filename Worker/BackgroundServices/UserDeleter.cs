@@ -29,7 +29,7 @@ namespace Worker
                 DeleteExpiredUsers()
                     .ContinueWith(task =>
                     {
-                        _logger.LogInformation($"Deleting expired users complete at {DateTime.Now}.");
+                        _logger.LogInformation("Deleting expired users complete.");
                     }, TaskContinuationOptions.None)
                     .ContinueWith(task =>
                     {
@@ -41,7 +41,7 @@ namespace Worker
 
         private async Task DeleteExpiredUsers()
         {
-            _logger.LogInformation($"Deleting expired users starting at {DateTime.Now}.");
+            _logger.LogInformation("Deleting expired users starting.");
             var expiredUserIds = await _mediatr.Send(new GetExpiredUsersQuery());
             if (!expiredUserIds.Any())
             {
