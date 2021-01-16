@@ -10,7 +10,7 @@ namespace Worker
 {
     public class UserDeleter : BackgroundService
     {
-        private const int PERIOD_HOURS = 12;
+        private const int PERIOD_HOURS = 24;
         private const int PERIOD_MILLISECONDS = 1000 * 60 * 60 * PERIOD_HOURS;
         private ILogger<UserDeleter> _logger;
         private IMediator _mediatr;

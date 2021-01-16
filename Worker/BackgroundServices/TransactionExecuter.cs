@@ -11,7 +11,7 @@ namespace Worker
     // https://ell.stackexchange.com/questions/19860/executer-vs-executor
     public class TransactionExecuter : BackgroundService
     {
-        private const int PERIOD_HOURS = 3;
+        private const int PERIOD_HOURS = 6;
         private const int PERIOD_MILLISECONDS = 1000 * 60 * 60 * PERIOD_HOURS;
         private ILogger<TransactionExecuter> _logger;
         private IMediator _mediatr;
