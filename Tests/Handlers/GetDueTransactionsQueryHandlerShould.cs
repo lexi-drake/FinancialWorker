@@ -3,9 +3,9 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Xunit;
 using Moq;
+using Serilog;
 using Worker;
 
 namespace Tests
@@ -25,7 +25,7 @@ namespace Tests
             _repo.Setup(x => x.GetRecurringTransactionsByFrequencyAndLastExecutedAsync(It.IsAny<string>(), It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(GetListOfRecurringTransactions()));
 
-            _handler = new GetDueTransactionsQueryHandler(new Mock<ILogger<GetDueTransactionsQueryHandler>>().Object, _repo.Object);
+            _handler = new GetDueTransactionsQueryHandler(new Mock<ILogger>().Object, _repo.Object);
         }
 
         [Fact]

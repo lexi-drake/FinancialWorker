@@ -2,9 +2,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
 using Xunit;
 using Moq;
+using Serilog;
 using Worker;
 
 namespace Tests
@@ -15,7 +15,7 @@ namespace Tests
         private long _entryCount;
         private long _transactionCount;
         private long _generatorCount;
-        private Mock<ILogger<DeleteLedgerDataForUsersCommandHandler>> _logger;
+        private Mock<ILogger> _logger;
         private DeleteLedgerDataForUsersCommandHandler _handler;
 
         public DeleteLedgerDataForUsersCommandHandlerShould()
@@ -25,7 +25,7 @@ namespace Tests
             _transactionCount = random.Next();
             _generatorCount = random.Next();
 
-            _logger = new Mock<ILogger<DeleteLedgerDataForUsersCommandHandler>>();
+            _logger = new Mock<ILogger>();
 
             var repo = new Mock<ILedgerRepository>();
             repo.Setup(x => x.DeleteLedgerEntriesByUserIdAsync(_userId))
@@ -48,8 +48,8 @@ namespace Tests
 
             await _handler.Handle(command, new CancellationToken());
 
-            _logger.VerifyLoggedInformation($"Deleting ledger data for user {_userId}.");
-            _logger.VerifyLoggedInformation($"Deleted {_entryCount} ledger entries, {_transactionCount} recurring transactions, and {_generatorCount} income generators.");
+            _logger.Verify(x => x.Information($"Deleting ledger data for user {_userId}."), Times.Once());
+            _logger.Verify(x => x.Information($"Deleted {_entryCount} ledger entries, {_transactionCount} recurring transactions, and {_generatorCount} income generators."), Times.Once());
         }
     }
 }

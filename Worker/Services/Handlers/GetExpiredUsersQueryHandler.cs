@@ -3,18 +3,18 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using MediatR;
+using Serilog;
 
 namespace Worker
 {
     public class GetExpiredUsersQueryHandler : IRequestHandler<GetExpiredUsersQuery, IEnumerable<string>>
     {
         private const int MAXIMUM_USER_AGE_DAYS = 45;
-        private ILogger<GetExpiredUsersQueryHandler> _logger;
+        private ILogger _logger;
         private IUserRespository _repo;
 
-        public GetExpiredUsersQueryHandler(ILogger<GetExpiredUsersQueryHandler> logger, IUserRespository repo)
+        public GetExpiredUsersQueryHandler(ILogger logger, IUserRespository repo)
         {
             _logger = logger;
             _repo = repo;

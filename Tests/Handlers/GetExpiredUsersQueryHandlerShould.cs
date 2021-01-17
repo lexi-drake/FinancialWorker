@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Xunit;
 using Moq;
 using Worker;
+using Serilog;
 
 namespace Tests
 {
@@ -20,7 +20,7 @@ namespace Tests
             _repo.Setup(x => x.GetUsersByLastLoggedInAsync(It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(GetListOfUsers()));
 
-            _handler = new GetExpiredUsersQueryHandler(new Mock<ILogger<GetExpiredUsersQueryHandler>>().Object, _repo.Object);
+            _handler = new GetExpiredUsersQueryHandler(new Mock<ILogger>().Object, _repo.Object);
         }
 
         [Fact]

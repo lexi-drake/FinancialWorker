@@ -1,10 +1,9 @@
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using MediatR;
+using Serilog;
 
 namespace Worker
 {
@@ -13,10 +12,10 @@ namespace Worker
     {
         private const int PERIOD_HOURS = 6;
         private const int PERIOD_MILLISECONDS = 1000 * 60 * 60 * PERIOD_HOURS;
-        private ILogger<TransactionExecuter> _logger;
+        private ILogger _logger;
         private IMediator _mediatr;
 
-        public TransactionExecuter(ILogger<TransactionExecuter> logger, IMediator mediatr)
+        public TransactionExecuter(ILogger logger, IMediator mediatr)
         {
             _logger = logger;
             _mediatr = mediatr;
@@ -24,17 +23,17 @@ namespace Worker
 
         protected override async Task ExecuteAsync(CancellationToken cancellation)
         {
-            _logger.LogInformation("TransactionExecuter beginning ExecuteAsync");
+            _logger.Information("TransactionExecuter beginning ExecuteAsync");
             while (!cancellation.IsCancellationRequested)
             {
                 ExecuteTransactions()
                     .ContinueWith(task =>
                     {
-                        _logger.LogInformation("Executing transactions complete.");
+                        _logger.Information("Executing transactions complete.");
                     }, TaskContinuationOptions.None)
                     .ContinueWith(task =>
                     {
-                        _logger.LogError(task.Exception.Message);
+                        _logger.Error(task.Exception.Message);
                     }, TaskContinuationOptions.OnlyOnFaulted);
                 await Task.Delay(PERIOD_MILLISECONDS, cancellation);
             }
@@ -42,11 +41,11 @@ namespace Worker
 
         private async Task ExecuteTransactions()
         {
-            _logger.LogInformation("Executing transactions starting.");
+            _logger.Information("Executing transactions starting.");
             var transactions = await _mediatr.Send(new GetDueTransactionsQuery());
             if (!transactions.Any())
             {
-                _logger.LogInformation("No transactions due.");
+                _logger.Information("No transactions due.");
             }
             var command = new ExecuteTransactionsCommand() { RecurringTransactions = transactions };
             await _mediatr.Send(command);

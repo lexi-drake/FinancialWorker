@@ -3,18 +3,18 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using MediatR;
+using Serilog;
 
 namespace Worker
 {
     public class GetDueTransactionsQueryHandler : IRequestHandler<GetDueTransactionsQuery, IEnumerable<RecurringTransaction>>
     {
         private const int MAXIMUM_USER_AGE_DAYS = 45;
-        private ILogger<GetDueTransactionsQueryHandler> _logger;
+        private ILogger _logger;
         private ILedgerRepository _repo;
 
-        public GetDueTransactionsQueryHandler(ILogger<GetDueTransactionsQueryHandler> logger, ILedgerRepository repo)
+        public GetDueTransactionsQueryHandler(ILogger logger, ILedgerRepository repo)
         {
             _logger = logger;
             _repo = repo;
@@ -33,7 +33,7 @@ namespace Worker
                 {
                     await _repo.UpdateRecurringTransactionLastTriggeredAsync(transaction.Id, DateTime.Now);
                 }
-                _logger.LogInformation($"{frequency.Description}: {transactions.Count()}");
+                _logger.Information($"{frequency.Description}: {transactions.Count()}");
             }
             return response;
         }

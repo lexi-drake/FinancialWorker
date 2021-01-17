@@ -1,16 +1,16 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using MediatR;
+using Serilog;
 
 namespace Worker
 {
     public class DeleteUsersCommandHandler : IRequestHandler<DeleteUsersCommand>
     {
-        private ILogger<DeleteUsersCommandHandler> _logger;
+        private ILogger _logger;
         private IUserRespository _repo;
 
-        public DeleteUsersCommandHandler(ILogger<DeleteUsersCommandHandler> logger, IUserRespository repo)
+        public DeleteUsersCommandHandler(ILogger logger, IUserRespository repo)
         {
             _logger = logger;
             _repo = repo;
@@ -20,7 +20,7 @@ namespace Worker
         {
             foreach (var id in command.UserIds)
             {
-                _logger.LogInformation($"Deleting user {id}.");
+                _logger.Information($"Deleting user {id}.");
                 await _repo.DeleteUserByIdAsync(id);
             }
             return Unit.Value;

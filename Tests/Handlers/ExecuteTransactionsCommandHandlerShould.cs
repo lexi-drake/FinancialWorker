@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Xunit;
 using Moq;
+using Serilog;
 using Worker;
 
 namespace Tests
@@ -18,7 +18,7 @@ namespace Tests
         {
             _repo = new Mock<ILedgerRepository>();
 
-            _handler = new ExecuteTransactionsCommandHandler(new Mock<ILogger<ExecuteTransactionsCommandHandler>>().Object, _repo.Object);
+            _handler = new ExecuteTransactionsCommandHandler(new Mock<ILogger>().Object, _repo.Object);
         }
 
         [Fact]

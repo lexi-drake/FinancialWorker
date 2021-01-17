@@ -1,17 +1,17 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using MediatR;
+using Serilog;
 
 namespace Worker
 {
     public class ExecuteTransactionsCommandHandler : IRequestHandler<ExecuteTransactionsCommand>
     {
-        private ILogger<ExecuteTransactionsCommandHandler> _logger;
+        private ILogger _logger;
         private ILedgerRepository _repo;
 
-        public ExecuteTransactionsCommandHandler(ILogger<ExecuteTransactionsCommandHandler> logger, ILedgerRepository repo)
+        public ExecuteTransactionsCommandHandler(ILogger logger, ILedgerRepository repo)
         {
             _logger = logger;
             _repo = repo;
@@ -21,7 +21,7 @@ namespace Worker
         {
             foreach (var transaction in command.RecurringTransactions)
             {
-                _logger.LogInformation($"Executing transaction {transaction.Id} for user {transaction.UserId}");
+                _logger.Information($"Executing transaction {transaction.Id} for user {transaction.UserId}");
                 var entry = new LedgerEntry()
                 {
                     UserId = transaction.UserId,

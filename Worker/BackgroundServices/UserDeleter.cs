@@ -1,10 +1,9 @@
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using MediatR;
+using Serilog;
 
 namespace Worker
 {
@@ -12,10 +11,10 @@ namespace Worker
     {
         private const int PERIOD_HOURS = 24;
         private const int PERIOD_MILLISECONDS = 1000 * 60 * 60 * PERIOD_HOURS;
-        private ILogger<UserDeleter> _logger;
+        private ILogger _logger;
         private IMediator _mediatr;
 
-        public UserDeleter(ILogger<UserDeleter> logger, IMediator mediatr)
+        public UserDeleter(ILogger logger, IMediator mediatr)
         {
             _logger = logger;
             _mediatr = mediatr;
@@ -23,18 +22,17 @@ namespace Worker
 
         protected override async Task ExecuteAsync(CancellationToken cancellation)
         {
-            Console.WriteLine($"loglevel info: {_logger.IsEnabled(LogLevel.Information)}");
-            _logger.LogInformation("UserDeleter beginning ExecuteAsync");
+            _logger.Information("UserDeleter beginning ExecuteAsync");
             while (!cancellation.IsCancellationRequested)
             {
                 DeleteExpiredUsers()
                     .ContinueWith(task =>
                     {
-                        _logger.LogInformation("Deleting expired users complete.");
+                        _logger.Information("Deleting expired users complete.");
                     }, TaskContinuationOptions.None)
                     .ContinueWith(task =>
                     {
-                        _logger.LogError(task.Exception.Message);
+                        _logger.Error(task.Exception.Message);
                     }, TaskContinuationOptions.OnlyOnFaulted);
                 await Task.Delay(PERIOD_MILLISECONDS, cancellation);
             }
@@ -42,11 +40,11 @@ namespace Worker
 
         private async Task DeleteExpiredUsers()
         {
-            _logger.LogInformation("Deleting expired users starting.");
+            _logger.Information("Deleting expired users starting.");
             var expiredUserIds = await _mediatr.Send(new GetExpiredUsersQuery());
             if (!expiredUserIds.Any())
             {
-                _logger.LogInformation("No expired users.");
+                _logger.Information("No expired users.");
                 return;
             }
 

@@ -9,5 +9,7 @@
     <PackageReference Include="Mediatr.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.11.5" />
+    <PackageReference Include="serilog" Version="2.10.0" />
+    <PackageReference Include="serilog.sinks.console" Version="3.1.1" />
   </ItemGroup>
 </Project>

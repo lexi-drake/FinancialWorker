@@ -1,10 +1,9 @@
-using System;
 using System.IO;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using MediatR;
+using Serilog;
 
 
 namespace Worker
@@ -33,15 +32,12 @@ namespace Worker
                     }
                     Configuration = config.Build();
                 })
-                .ConfigureLogging(logging =>
-                {
-                    logging.ClearProviders();
-                    logging.SetMinimumLevel(LogLevel.Information);
-                    logging.AddConsole();
-                })
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddLogging();
+                    ILogger logger = new LoggerConfiguration()
+                        .WriteTo.Console()
+                        .CreateLogger();
+                    services.AddScoped<ILogger>(s => logger);
                     services.AddScoped<ILedgerRepository>(s => new LedgerRepository(
                         Configuration["MONGO_DB"],
                         Configuration["LEDGER_DB"]));
