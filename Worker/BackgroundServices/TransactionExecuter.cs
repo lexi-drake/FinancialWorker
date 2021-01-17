@@ -26,7 +26,7 @@ namespace Worker
             _logger.Information("TransactionExecuter beginning ExecuteAsync");
             while (!cancellation.IsCancellationRequested)
             {
-                ExecuteTransactions()
+                var task = ExecuteTransactions()
                     .ContinueWith(task =>
                     {
                         _logger.Information("Executing transactions complete.");

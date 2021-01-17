@@ -36,9 +36,12 @@ namespace Worker
                 .ConfigureServices((hostContext, services) =>
                 {
                     ILogger logger = new LoggerConfiguration()
+                        .MinimumLevel.Information()
+                        .WriteTo.File("./log.log")
                         .WriteTo.Console()
                         .CreateLogger();
                     services.AddScoped<ILogger>(s => logger);
+
                     services.AddScoped<ILedgerRepository>(s => new LedgerRepository(
                         Configuration["MONGO_DB"],
                         Configuration["LEDGER_DB"]));

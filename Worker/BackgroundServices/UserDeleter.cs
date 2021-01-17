@@ -25,7 +25,7 @@ namespace Worker
             _logger.Information("UserDeleter beginning ExecuteAsync");
             while (!cancellation.IsCancellationRequested)
             {
-                DeleteExpiredUsers()
+                var task = DeleteExpiredUsers()
                     .ContinueWith(task =>
                     {
                         _logger.Information("Deleting expired users complete.");
