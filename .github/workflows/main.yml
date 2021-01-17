@@ -16,5 +16,5 @@ jobs:
         APP_NAME: ${{ 'financial-worker-alexa' }}
       run: |
         docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
-        heroku container: push worker -a $APP_NAME
-        heroku container: release worker -a $APP_NAME
+        heroku container:push worker -a $APP_NAME
+        heroku container:release worker -a $APP_NAME
