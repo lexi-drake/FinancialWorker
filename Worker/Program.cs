@@ -20,6 +20,7 @@ namespace Worker
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseSerilog()
                 .ConfigureAppConfiguration((hostContext, config) =>
                 {
                     if (File.Exists(APPSETTINGS))
