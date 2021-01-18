@@ -44,6 +44,7 @@ namespace Worker
             {
                 52 => 7,                                                        // Weekly
                 26 => 14,                                                       // Biweekly
+                24 => (DateTime.Now - DateTime.Now.AddMonths(-1)).TotalDays / 2,// Semimonthly                                                    
                 12 => (DateTime.Now - DateTime.Now.AddMonths(-1)).TotalDays,    // Monthly
                 4 => (DateTime.Now - DateTime.Now.AddMonths(-3)).TotalDays,     // Quarterly
                 2 => (DateTime.Now - DateTime.Now.AddMonths(-6)).TotalDays,     // Semiannually

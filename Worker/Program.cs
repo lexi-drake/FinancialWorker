@@ -35,7 +35,7 @@ namespace Worker
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
-                    ILogger logger = new LoggerConfiguration()
+                    var logger = new LoggerConfiguration()
                         .MinimumLevel.Information()
                         .WriteTo.File("./log.log")
                         .WriteTo.Console()
