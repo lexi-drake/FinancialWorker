@@ -19,6 +19,7 @@ namespace Worker
             _logger = logger;
             _repo = repo;
         }
+
         public async Task<IEnumerable<RecurringTransaction>> Handle(GetDueTransactionsQuery query, CancellationToken cancellation)
         {
             var frequencies = await _repo.GetFrequenciesAsync();
@@ -44,7 +45,7 @@ namespace Worker
             {
                 52 => 7,                                                        // Weekly
                 26 => 14,                                                       // Biweekly
-                24 => (DateTime.Now - DateTime.Now.AddMonths(-1)).TotalDays / 2,// Semimonthly                                                    
+                24 => GetSemimonthlyLookbackDays(),                             // Semimonthly                                                    
                 12 => (DateTime.Now - DateTime.Now.AddMonths(-1)).TotalDays,    // Monthly
                 4 => (DateTime.Now - DateTime.Now.AddMonths(-3)).TotalDays,     // Quarterly
                 2 => (DateTime.Now - DateTime.Now.AddMonths(-6)).TotalDays,     // Semiannually
@@ -52,6 +53,26 @@ namespace Worker
                 _ => throw new ArgumentException($"Unknown frequency {frequency.Description}")
             };
             return (int)Math.Round(days);
+        }
+
+        private double GetSemimonthlyLookbackDays()
+        {
+            var today = DateTime.Now.Day;
+            var daysInMonth = DateTime.Now.AddMonths(1).AddDays(-today).Day;
+
+            // If today is in the first half of the month, use half of the number of days in
+            // the previous month, otherwise use half of the number of days in the current month.
+            // Thus, if today is March 3, look back 14 days (number of days in February, usually)
+            // to February 17; however, if today is March 25, look back 15.5 (16) days to
+            // March 9.
+            if(today < daysInMonth / 2) 
+            {
+                return (DateTime.Now - DateTime.Now.AddMonths(-1)).TotalDays / 2;
+            }
+            else 
+            {
+                return (DateTime.Now.AddMonths(1) - DateTime.Now).TotalDays / 2;
+            }
         }
     }
 }
