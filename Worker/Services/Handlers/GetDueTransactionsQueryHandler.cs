@@ -32,7 +32,7 @@ namespace Worker
                 response.AddRange(transactions);
                 foreach (var transaction in transactions)
                 {
-                    await _repo.UpdateRecurringTransactionLastTriggeredAsync(transaction.Id, DateTime.Now);
+                    await _repo.UpdateRecurringTransactionLastTriggeredAsync(transaction.Id, DateTime.Now.AddMinutes(-1));
                 }
                 _logger.Information($"{frequency.Description}: {transactions.Count()}");
             }
@@ -65,11 +65,11 @@ namespace Worker
             // Thus, if today is March 3, look back 14 days (number of days in February, usually)
             // to February 17; however, if today is March 25, look back 15.5 (16) days to
             // March 9.
-            if(today < daysInMonth / 2) 
+            if (today < daysInMonth / 2)
             {
                 return (DateTime.Now - DateTime.Now.AddMonths(-1)).TotalDays / 2;
             }
-            else 
+            else
             {
                 return (DateTime.Now.AddMonths(1) - DateTime.Now).TotalDays / 2;
             }

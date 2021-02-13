@@ -35,7 +35,7 @@ namespace Worker
                     CreatedDate = DateTime.Now
                 };
                 await _repo.InsertLedgerEntryAsync(entry);
-                await _repo.UpdateRecurringTransactionLastExecutedAsync(transaction.Id, DateTime.Now);
+                await _repo.UpdateRecurringTransactionLastExecutedAsync(transaction.Id, DateTime.Now.AddMinutes(-1));
                 await AddOrUpdateCategoryAsync(transaction.Category);
             }
             return Unit.Value;
