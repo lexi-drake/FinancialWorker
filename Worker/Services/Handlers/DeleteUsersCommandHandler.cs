@@ -22,6 +22,7 @@ namespace Worker
             {
                 _logger.Information($"Deleting user {id}.");
                 await _repo.DeleteUserByIdAsync(id);
+                await _repo.DeleteMessagesByRecipientIdAsync(id);
             }
             return Unit.Value;
         }
