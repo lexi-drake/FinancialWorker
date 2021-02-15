@@ -28,11 +28,5 @@ namespace Worker
             var filter = Builders<User>.Filter.Eq(x => x.Id, id);
             await _db.GetCollection<User>().DeleteOneAsync(filter);
         }
-
-        public async Task DeleteMessagesByRecipientIdAsync(string id)
-        {
-            var filter = Builders<Message>.Filter.Eq(x => x.RecipientId, id);
-            await _db.GetCollection<Message>().DeleteManyAsync(filter);
-        }
     }
 }

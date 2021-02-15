@@ -8,6 +8,5 @@ namespace Worker
     {
         Task<IEnumerable<User>> GetUsersByLastLoggedInAsync(DateTime since);
         Task DeleteUserByIdAsync(string id);
-        Task DeleteMessagesByRecipientIdAsync(string id);
     }
 }

@@ -40,7 +40,6 @@ namespace Tests
             await _handler.Handle(command, new CancellationToken());
 
             _repo.Verify(x => x.DeleteUserByIdAsync(It.IsAny<string>()), Times.Exactly(count));
-            _repo.Verify(x => x.DeleteMessagesByRecipientIdAsync(It.IsAny<string>()), Times.Exactly(count));
         }
     }
 }
